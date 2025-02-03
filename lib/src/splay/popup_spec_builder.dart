@@ -8,7 +8,7 @@ import 'package:supercluster/supercluster.dart';
 class PopupSpecBuilder {
   static PopupSpec forDisplacedMarker(
     DisplacedMarker displacedMarker,
-    int lowestZoom,
+    double lowestZoom,
   ) =>
       PopupSpec(
         namespace: SuperclusterLayer.popupNamespace,

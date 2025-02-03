@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:flutter_map_supercluster/flutter_map_supercluster.dart';
 import 'package:flutter_map_supercluster_example/drawer.dart';
 import 'package:flutter_map_supercluster_example/font/accurate_map_icons.dart';
@@ -16,21 +15,17 @@ class MutableClustersPage extends StatefulWidget {
   State<MutableClustersPage> createState() => _MutableClustersPageState();
 }
 
-class _MutableClustersPageState extends State<MutableClustersPage>
-    with TickerProviderStateMixin {
+class _MutableClustersPageState extends State<MutableClustersPage> {
   late final SuperclusterMutableController _superclusterController;
-  late final AnimatedMapController _animatedMapController;
+  late final MapController _mapController;
 
-  final List<Marker> _initialMarkers = [
-    const LatLng(51.5, -0.09),
-    const LatLng(53.3498, -6.2603),
-    const LatLng(53.3488, -6.2613)
-  ].map((point) => _createMarker(point, Colors.black)).toList();
+  final List<Marker> _initialMarkers =
+      [const LatLng(51.5, -0.09), const LatLng(53.3498, -6.2603), const LatLng(53.3488, -6.2613)].map((point) => _createMarker(point, Colors.black)).toList();
 
   @override
   void initState() {
     _superclusterController = SuperclusterMutableController();
-    _animatedMapController = AnimatedMapController(vsync: this);
+    _mapController = MapController();
 
     super.initState();
   }
@@ -38,7 +33,7 @@ class _MutableClustersPageState extends State<MutableClustersPage>
   @override
   void dispose() {
     _superclusterController.dispose();
-    _animatedMapController.dispose();
+    _mapController.dispose();
     super.dispose();
   }
 
@@ -55,8 +50,7 @@ class _MutableClustersPageState extends State<MutableClustersPage>
               if (data.loading) {
                 markerCountLabel = '...';
               } else {
-                markerCountLabel =
-                    (data.aggregatedClusterData?.markerCount ?? 0).toString();
+                markerCountLabel = (data.aggregatedClusterData?.markerCount ?? 0).toString();
               }
 
               return Center(
@@ -94,7 +88,7 @@ class _MutableClustersPageState extends State<MutableClustersPage>
           ],
         ),
         body: FlutterMap(
-          mapController: _animatedMapController.mapController,
+          mapController: _mapController,
           options: MapOptions(
             initialCenter: _initialMarkers[0].point,
             initialZoom: 5,
@@ -114,9 +108,9 @@ class _MutableClustersPageState extends State<MutableClustersPage>
               indexBuilder: IndexBuilders.rootIsolate,
               loadingOverlayBuilder: (_) => const SizedBox.shrink(),
               controller: _superclusterController,
-              moveMap: (center, zoom) => _animatedMapController.animateTo(
-                dest: center,
-                zoom: zoom,
+              moveMap: (center, zoom) => _mapController.move(
+                center,
+                zoom,
               ),
               popupOptions: PopupOptions(
                 popupDisplayOptions: PopupDisplayOptions(

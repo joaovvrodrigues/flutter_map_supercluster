@@ -88,8 +88,8 @@ class SpreadClusterSplayDelegate extends ClusterSplayDelegate {
   List<DisplacedMarker> displaceMarkers(
     List<Marker> markers, {
     required LatLng clusterPosition,
-    required Point Function(LatLng latLng) project,
-    required LatLng Function(Point point) unproject,
+    required Offset Function(LatLng latLng) project,
+    required LatLng Function(Offset point) unproject,
   }) {
     final markersWithAngles = markers
         .map(
@@ -101,9 +101,7 @@ class SpreadClusterSplayDelegate extends ClusterSplayDelegate {
         .toList()
       ..sort((a, b) => a.angle.compareTo(b.angle));
 
-    final circleOffsets = _clockwiseCircle(
-        distance + (distanceIncrement * markersWithAngles.length),
-        markersWithAngles.length);
+    final circleOffsets = _clockwiseCircle(distance + (distanceIncrement * markersWithAngles.length), markersWithAngles.length);
     final clusterPointAtMaxZoom = project(clusterPosition);
 
     final result = <DisplacedMarker>[];
@@ -124,53 +122,46 @@ class SpreadClusterSplayDelegate extends ClusterSplayDelegate {
   List<DisplacedMarkerOffset> displacedMarkerOffsets(
     List<DisplacedMarker> displacedMarkers,
     double animationProgress,
-    Point<num> Function(LatLng point) getPixelOffset,
-    Point clusterPosition,
+    Offset Function(LatLng point) getPixelOffset,
+    Offset clusterPosition,
   ) {
     return displacedMarkers
         .map(
           (displacedMarker) => DisplacedMarkerOffset(
             displacedMarker: displacedMarker,
-            displacedOffset: (getPixelOffset(displacedMarker.displacedPoint) -
-                    clusterPosition) *
-                animationProgress,
-            originalOffset:
-                getPixelOffset(displacedMarker.originalPoint) - clusterPosition,
+            displacedOffset: (getPixelOffset(displacedMarker.displacedPoint) - clusterPosition) * animationProgress,
+            originalOffset: getPixelOffset(displacedMarker.originalPoint) - clusterPosition,
           ),
         )
         .toList();
   }
 
   @override
-  Widget? splayDecoration(List<DisplacedMarkerOffset> displacedMarkerOffsets) =>
-      splayLineOptions == null
-          ? null
-          : _DisplacedMarkerSplay(
-              width: distance +
-                  (distanceIncrement * displacedMarkerOffsets.length) * 2.0,
-              height: distance +
-                  (distanceIncrement * displacedMarkerOffsets.length) * 2.0,
-              displacedMarkerOffsets: displacedMarkerOffsets,
-              splayLineOptions: splayLineOptions!,
-            );
+  Widget? splayDecoration(List<DisplacedMarkerOffset> displacedMarkerOffsets) => splayLineOptions == null
+      ? null
+      : _DisplacedMarkerSplay(
+          width: distance + (distanceIncrement * displacedMarkerOffsets.length) * 2.0,
+          height: distance + (distanceIncrement * displacedMarkerOffsets.length) * 2.0,
+          displacedMarkerOffsets: displacedMarkerOffsets,
+          splayLineOptions: splayLineOptions!,
+        );
 
   // Get the angle in radians from [origin] to [other].
   static double _angle(LatLng origin, LatLng other) {
     final dLon = other.longitudeInRad - origin.longitudeInRad;
     final y = sin(dLon);
-    final x = cos(origin.latitudeInRad) * tan(other.latitudeInRad) -
-        sin(origin.latitudeInRad) * cos(dLon);
+    final x = cos(origin.latitudeInRad) * tan(other.latitudeInRad) - sin(origin.latitudeInRad) * cos(dLon);
 
     return atan2(y, x);
   }
 
-  static List<Point> _clockwiseCircle(double radius, int count) {
+  static List<Offset> _clockwiseCircle(double radius, int count) {
     final angleStep = pi2 / count;
 
-    return List<Point>.generate(count, (index) {
+    return List<Offset>.generate(count, (index) {
       final angle = circleStartAngle + index * angleStep;
 
-      return Point<double>(
+      return Offset(
         radius * cos(angle),
         radius * sin(angle),
       );
@@ -245,8 +236,8 @@ class _DisplacementPainter extends CustomPainter {
       canvas.drawLine(
         Offset(centerOffset.dx, centerOffset.dy),
         Offset(
-          offset.displacedOffset.x + centerOffset.dx,
-          offset.displacedOffset.y + centerOffset.dy,
+          offset.displacedOffset.dx + centerOffset.dx,
+          offset.displacedOffset.dy + centerOffset.dy,
         ),
         paint,
       );
@@ -255,7 +246,5 @@ class _DisplacementPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_DisplacementPainter oldDelegate) =>
-      oldDelegate.splayLineOptions != splayLineOptions ||
-      oldDelegate.offsets != offsets ||
-      oldDelegate.centerOffset != centerOffset;
+      oldDelegate.splayLineOptions != splayLineOptions || oldDelegate.offsets != offsets || oldDelegate.centerOffset != centerOffset;
 }

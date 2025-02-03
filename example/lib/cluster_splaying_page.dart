@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:flutter_map_supercluster/flutter_map_supercluster.dart';
 import 'package:flutter_map_supercluster_example/drawer.dart';
 import 'package:flutter_map_supercluster_example/main.dart';
@@ -17,10 +16,9 @@ class ClusterSplayingPage extends StatefulWidget {
   State<ClusterSplayingPage> createState() => _ClusterSplayingPageState();
 }
 
-class _ClusterSplayingPageState extends State<ClusterSplayingPage>
-    with TickerProviderStateMixin {
+class _ClusterSplayingPageState extends State<ClusterSplayingPage> {
   late final SuperclusterImmutableController _superclusterController;
-  late final AnimatedMapController _animatedMapController;
+  late final MapController _mapController;
 
   static const points = [
     LatLng(51.4001, -0.08001),
@@ -53,13 +51,13 @@ class _ClusterSplayingPageState extends State<ClusterSplayingPage>
     super.initState();
 
     _superclusterController = SuperclusterImmutableController();
-    _animatedMapController = AnimatedMapController(vsync: this);
+    _mapController = MapController();
   }
 
   @override
   void dispose() {
     _superclusterController.dispose();
-    _animatedMapController.dispose();
+    _mapController.dispose();
     super.dispose();
   }
 
@@ -86,7 +84,7 @@ class _ClusterSplayingPageState extends State<ClusterSplayingPage>
         ),
         drawer: buildDrawer(context, ClusterSplayingPage.route),
         body: FlutterMap(
-          mapController: _animatedMapController.mapController,
+          mapController: _mapController,
           options: MapOptions(
             initialCenter: const LatLng(51.4931, -0.1003),
             initialZoom: 10,
@@ -104,9 +102,9 @@ class _ClusterSplayingPageState extends State<ClusterSplayingPage>
               initialMarkers: markers,
               indexBuilder: IndexBuilders.rootIsolate,
               controller: _superclusterController,
-              moveMap: (center, zoom) => _animatedMapController.animateTo(
-                dest: center,
-                zoom: zoom,
+              moveMap: (center, zoom) => _mapController.move(
+                center,
+                zoom,
               ),
               clusterWidgetSize: const Size(40, 40),
               clusterAlignment: Alignment.center,
@@ -124,9 +122,7 @@ class _ClusterSplayingPageState extends State<ClusterSplayingPage>
               ),
               builder: (context, position, markerCount, extraClusterData) {
                 return Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                      color: Colors.blue),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0), color: Colors.blue),
                   child: Center(
                     child: Text(
                       markerCount.toString(),

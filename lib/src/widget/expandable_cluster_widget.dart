@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_popup/extension_api.dart';
@@ -21,7 +19,7 @@ class ExpandableClusterWidget extends StatelessWidget {
   final Widget Function(BuildContext, Marker) markerBuilder;
   final void Function(PopupSpec popupSpec) onMarkerTap;
   final VoidCallback onCollapse;
-  final Point clusterPixelPosition;
+  final Offset clusterPixelPosition;
 
   ExpandableClusterWidget({
     Key? key,
@@ -33,8 +31,7 @@ class ExpandableClusterWidget extends StatelessWidget {
     required this.markerBuilder,
     required this.onMarkerTap,
     required this.onCollapse,
-  })  : clusterPixelPosition =
-            mapCamera.getPixelOffset(expandedCluster.layerCluster.latLng),
+  })  : clusterPixelPosition = mapCamera.getPixelOffset(expandedCluster.layerCluster.latLng),
         super(key: ValueKey('expandable-${expandedCluster.layerCluster.uuid}'));
 
   @override
@@ -55,8 +52,8 @@ class ExpandableClusterWidget extends StatelessWidget {
             children: [
               if (splayDecoration != null)
                 Positioned(
-                  left: clusterPixelPosition.x - expandedCluster.splayDistance,
-                  top: clusterPixelPosition.y - expandedCluster.splayDistance,
+                  left: clusterPixelPosition.dx - expandedCluster.splayDistance,
+                  top: clusterPixelPosition.dy - expandedCluster.splayDistance,
                   width: expandedCluster.splayDistance * 2,
                   height: expandedCluster.splayDistance * 2,
                   child: splayDecoration,
@@ -81,8 +78,7 @@ class ExpandableClusterWidget extends StatelessWidget {
               ClusterWidget(
                 mapCamera: mapCamera,
                 cluster: expandedCluster.layerCluster,
-                builder: (context, latLng, count, data) =>
-                    expandedCluster.buildCluster(context, builder),
+                builder: (context, latLng, count, data) => expandedCluster.buildCluster(context, builder),
                 onTap: expandedCluster.isExpanded ? onCollapse : () {},
                 size: size,
                 alignment: clusterAlignment,

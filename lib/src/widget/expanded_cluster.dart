@@ -37,10 +37,8 @@ class ExpandedCluster {
         displacedMarkers = clusterSplayDelegate.displaceMarkers(
           layerPoints.map((e) => e.originalPoint).toList(),
           clusterPosition: layerCluster.latLng,
-          project: (latLng) =>
-              mapCamera.project(latLng, layerCluster.highestZoom.toDouble()),
-          unproject: (point) =>
-              mapCamera.unproject(point, layerCluster.highestZoom.toDouble()),
+          project: (latLng) => mapCamera.projectAtZoom(latLng, layerCluster.highestZoom),
+          unproject: (point) => mapCamera.unprojectAtZoom(point, layerCluster.highestZoom),
         ),
         maxMarkerSize = layerPoints.fold(
           Size.zero,
@@ -49,10 +47,7 @@ class ExpandedCluster {
             max(previous.height, layerPoint.originalPoint.height),
           ),
         ) {
-    markersToDisplacedMarkers = {
-      for (final displacedMarker in displacedMarkers)
-        displacedMarker.marker: displacedMarker
-    };
+    markersToDisplacedMarkers = {for (final displacedMarker in displacedMarkers) displacedMarker.marker: displacedMarker};
     _splayAnimation = CurvedAnimation(
       parent: animation,
       curve: clusterSplayDelegate.curve,
@@ -63,11 +58,11 @@ class ExpandedCluster {
     );
   }
 
-  int get minimumVisibleZoom => layerCluster.highestZoom;
+  double get minimumVisibleZoom => layerCluster.highestZoom;
 
   List<DisplacedMarkerOffset> displacedMarkerOffsets(
     MapCamera mapCamera,
-    Point clusterPosition,
+    Offset clusterPosition,
   ) =>
       clusterSplayDelegate.displacedMarkerOffsets(
         displacedMarkers,
@@ -76,8 +71,7 @@ class ExpandedCluster {
         clusterPosition,
       );
 
-  Widget? splayDecoration(List<DisplacedMarkerOffset> displacedMarkerOffsets) =>
-      clusterSplayDelegate.splayDecoration(displacedMarkerOffsets);
+  Widget? splayDecoration(List<DisplacedMarkerOffset> displacedMarkerOffsets) => clusterSplayDelegate.splayDecoration(displacedMarkerOffsets);
 
   Widget buildCluster(
     BuildContext context,
@@ -98,11 +92,9 @@ class ExpandedCluster {
 
   bool get isExpanded => animation.status == AnimationStatus.completed;
 
-  bool get collapsing =>
-      animation.isAnimating && animation.status == AnimationStatus.reverse;
+  bool get collapsing => animation.isAnimating && animation.status == AnimationStatus.reverse;
 
-  Iterable<Marker> get markers =>
-      displacedMarkers.map((displacedMarker) => displacedMarker.marker);
+  Iterable<Marker> get markers => displacedMarkers.map((displacedMarker) => displacedMarker.marker);
 
   void tryCollapse(void Function(TickerFuture collapseTicker) onCollapse) {
     if (!collapsing) onCollapse(animation.reverse());
