@@ -15,7 +15,7 @@ class PopupSpecBuilder {
         marker: displacedMarker.marker,
         markerPointOverride: displacedMarker.displacedPoint,
         markerAlignmentOverride: DisplacedMarker.alignment,
-        removeIfZoomLessThan: lowestZoom,
+        removeIfZoomLessThan: lowestZoom.toInt(),
       );
 
   static List<PopupSpec> buildList({
@@ -69,7 +69,7 @@ class PopupSpecBuilder {
       if (matchingDisplacedMarker != null) {
         return forDisplacedMarker(
           matchingDisplacedMarker,
-          expandedCluster.layerCluster.highestZoom,
+          expandedCluster.layerCluster.highestZoom.toDouble(),
         );
       }
     }

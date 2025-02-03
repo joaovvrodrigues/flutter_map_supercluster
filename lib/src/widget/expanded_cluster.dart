@@ -37,8 +37,8 @@ class ExpandedCluster {
         displacedMarkers = clusterSplayDelegate.displaceMarkers(
           layerPoints.map((e) => e.originalPoint).toList(),
           clusterPosition: layerCluster.latLng,
-          project: (latLng) => mapCamera.projectAtZoom(latLng, layerCluster.highestZoom),
-          unproject: (point) => mapCamera.unprojectAtZoom(point, layerCluster.highestZoom),
+          project: (latLng) => mapCamera.projectAtZoom(latLng, layerCluster.highestZoom.toDouble()),
+          unproject: (point) => mapCamera.unprojectAtZoom(point, layerCluster.highestZoom.toDouble()),
         ),
         maxMarkerSize = layerPoints.fold(
           Size.zero,
@@ -58,7 +58,7 @@ class ExpandedCluster {
     );
   }
 
-  double get minimumVisibleZoom => layerCluster.highestZoom;
+  double get minimumVisibleZoom => layerCluster.highestZoom.toDouble();
 
   List<DisplacedMarkerOffset> displacedMarkerOffsets(
     MapCamera mapCamera,

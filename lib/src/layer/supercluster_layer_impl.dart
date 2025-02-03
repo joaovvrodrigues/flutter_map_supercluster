@@ -525,7 +525,7 @@ class _SuperclusterLayerImplState extends State<SuperclusterLayerImpl> with Tick
     if (showPopup) {
       final popupSpec = PopupSpecBuilder.forDisplacedMarker(
         displacedMarker,
-        layerCluster.highestZoom,
+        layerCluster.highestZoom.toDouble(),
       );
       _selectMarker(popupSpec);
     }
