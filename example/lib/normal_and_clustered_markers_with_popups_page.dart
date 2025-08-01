@@ -75,7 +75,7 @@ class _NormalAndClusteredMarkersWithPopupsPageState
             initialCenter: points[0],
             initialZoom: 5,
             maxZoom: 15,
-            onTap: (_, __) {
+            onTap: (_, _) {
               _popupController.hideAllPopups();
             },
           ),

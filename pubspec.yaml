@@ -1,6 +1,6 @@
 name: flutter_map_supercluster
 description: Very fast Marker clustering for flutter_map. Supports efficient adding/removing of Markers.
-version: 5.0.0-dev.1
+version: 5.0.0-dev.4
 publish_to: none
 homepage: https://github.com/rorystephenson/flutter_map_supercluster
 topics:
@@ -8,25 +8,21 @@ topics:
   - cluster
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ^3.8.0
   flutter: ">=3.10.0"
 
 dependencies:
-  flutter_map_marker_popup:
-    git:
-      url: https://github.com/tobesucht/flutter_map_marker_popup.git
-      ref: master
-
+  flutter_map_marker_popup: ^8.0.1
   async: ^2.11.0
   equatable: ^2.0.5
   flutter:
     sdk: flutter
-  flutter_map: ^8.1.0
+  flutter_map: ^8.2.1
   latlong2: ^0.9.1
-  provider: ^6.1.1
+  provider: ^6.1.5
   supercluster: ^3.1.0
 
 dev_dependencies:
-  flutter_lints: ^3.0.1
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter

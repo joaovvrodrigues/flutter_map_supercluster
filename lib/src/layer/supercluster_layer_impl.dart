@@ -474,8 +474,10 @@ class _SuperclusterLayerImplState extends State<SuperclusterLayerImpl>
         aggregatedClusterData: clusterData,
         supercluster: supercluster,
       );
-      InheritedSuperclusterScope.of(context, listen: false)
-          .setSuperclusterState(superclusterState);
+      if (mounted) {
+        InheritedSuperclusterScope.of(context, listen: false)
+            .setSuperclusterState(superclusterState);
+      }
     });
   }
 

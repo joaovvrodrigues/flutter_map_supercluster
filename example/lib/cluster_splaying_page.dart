@@ -17,8 +17,7 @@ class ClusterSplayingPage extends StatefulWidget {
   State<ClusterSplayingPage> createState() => _ClusterSplayingPageState();
 }
 
-class _ClusterSplayingPageState extends State<ClusterSplayingPage>
-    with TickerProviderStateMixin {
+class _ClusterSplayingPageState extends State<ClusterSplayingPage> with TickerProviderStateMixin {
   late final SuperclusterImmutableController _superclusterController;
   late final AnimatedMapController _animatedMapController;
 
@@ -91,7 +90,7 @@ class _ClusterSplayingPageState extends State<ClusterSplayingPage>
             initialCenter: const LatLng(51.4931, -0.1003),
             initialZoom: 10,
             maxZoom: 16,
-            onTap: (_, __) {
+            onTap: (_, _) {
               _superclusterController.collapseSplayedClusters();
             },
           ),
@@ -124,9 +123,7 @@ class _ClusterSplayingPageState extends State<ClusterSplayingPage>
               ),
               builder: (context, position, markerCount, extraClusterData) {
                 return Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                      color: Colors.blue),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0), color: Colors.blue),
                   child: Center(
                     child: Text(
                       markerCount.toString(),
